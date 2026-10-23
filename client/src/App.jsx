@@ -49,9 +49,7 @@ export default function App() {
     try {
       const web3 = getWeb3Instance();
       if (!web3) {
-        setContractError(
-          "MetaMask is not detected. Please install the MetaMask browser extension."
-        );
+        // Only set error if account was previously connected or after mount
         return;
       }
 
@@ -110,7 +108,7 @@ export default function App() {
     if (typeof window === "undefined" || !window.ethereum) {
       setStatusMessage({
         type: "error",
-        text: "MetaMask is not installed. Please install MetaMask to use De-Vote.",
+        text: "MetaMask is not detected in this browser. Please install the MetaMask extension from https://metamask.io and refresh this page.",
       });
       return;
     }
@@ -118,6 +116,7 @@ export default function App() {
     try {
       setLoading(true);
       setStatusMessage(null);
+      setContractError(null);
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
@@ -139,19 +138,40 @@ export default function App() {
     }
   };
 
-  // Listen to MetaMask account and chain changes
+  // Listen to MetaMask provider initialization, account and chain changes
+  useEffect(() => {
+    const checkAccounts = () => {
+      if (typeof window !== "undefined" && window.ethereum) {
+        window.ethereum
+          .request({ method: "eth_accounts" })
+          .then((accounts) => {
+            if (accounts && accounts.length > 0) {
+              setAccount(accounts[0]);
+            }
+          })
+          .catch(console.error);
+        loadBlockchainData();
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      if (window.ethereum) {
+        checkAccounts();
+      } else {
+        window.addEventListener("ethereum#initialized", checkAccounts, {
+          once: true,
+        });
+        const timer = setTimeout(checkAccounts, 1200);
+        return () => {
+          window.removeEventListener("ethereum#initialized", checkAccounts);
+          clearTimeout(timer);
+        };
+      }
+    }
+  }, [loadBlockchainData]);
+
   useEffect(() => {
     if (typeof window !== "undefined" && window.ethereum) {
-      // Check already connected accounts on mount
-      window.ethereum
-        .request({ method: "eth_accounts" })
-        .then((accounts) => {
-          if (accounts && accounts.length > 0) {
-            setAccount(accounts[0]);
-          }
-        })
-        .catch(console.error);
-
       const handleAccountsChanged = (accounts) => {
         if (accounts.length > 0) {
           setAccount(accounts[0]);
@@ -174,7 +194,6 @@ export default function App() {
       };
 
       const handleChainChanged = () => {
-        // Recommended by MetaMask: reload page to clear stale cache
         window.location.reload();
       };
 

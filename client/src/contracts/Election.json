@@ -12727,12 +12727,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xc898fac21ab6F0d65a042ad19f19476733Bba974",
-      "transactionHash": "0x3dab3f2d3a84d47f81e0bb4e35fb90984eafe1d9f35bfca5bc43c58a89ff7d2e"
+      "address": "0xa65d05C10ffbc861497507fA02F5f04F4aC92233",
+      "transactionHash": "0xe5db194ca3d430ba05639a353c476e2b442a56a21fce8db5819271f56d2cecd1"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-10-23T19:10:37.697Z",
+  "updatedAt": "2026-10-23T19:45:28.513Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Simple blockchain-based voting contract for the De-Vote DApp. Implements election lifecycle (NotStarted, InProgress, Ended), dynamic candidate and voter registration by Admin, single-vote casting, and result tallying.",
