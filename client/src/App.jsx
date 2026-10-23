@@ -388,6 +388,48 @@ export default function App() {
     }
   };
 
+  // Helper to automatically add and switch to Ganache Local network in MetaMask
+  const handleAddGanacheNetwork = async () => {
+    if (typeof window === "undefined" || !window.ethereum) {
+      setStatusMessage({
+        type: "error",
+        text: "MetaMask is not detected. Please install the MetaMask extension.",
+      });
+      return;
+    }
+    try {
+      setLoading(true);
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: "0x1691", // 5777 in hex
+            chainName: "Ganache Local",
+            rpcUrls: ["http://127.0.0.1:7545"],
+            nativeCurrency: {
+              name: "Ethereum",
+              symbol: "ETH",
+              decimals: 18,
+            },
+          },
+        ],
+      });
+      setStatusMessage({
+        type: "success",
+        text: "Added and switched to Ganache Local (5777) in MetaMask!",
+      });
+      await loadBlockchainData();
+    } catch (err) {
+      console.error(err);
+      setStatusMessage({
+        type: "error",
+        text: err.message || "Failed to add Ganache network.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="app-container">
       {/* Header */}
@@ -400,6 +442,14 @@ export default function App() {
         </div>
 
         <div className="header-wallet">
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={handleAddGanacheNetwork}
+            disabled={loading}
+            title="Automatically add and switch to Ganache Local network in MetaMask"
+          >
+            + Add Ganache to MetaMask
+          </button>
           {account ? (
             <div className="wallet-info">
               <span className="wallet-badge" title={account}>
