@@ -30,7 +30,12 @@ export const getContractInstance = async (web3) => {
     const networkId = rawNetworkId.toString();
 
     const networks = ElectionArtifact.networks || {};
-    const deployedNetwork = networks[networkId];
+    let deployedNetwork = networks[networkId];
+
+    // Ganache may report network ID 5777 while EVM chain ID is 1337 (or vice-versa)
+    if (!deployedNetwork && (networkId === "1337" || networkId === "5777")) {
+      deployedNetwork = networks["5777"] || networks["1337"];
+    }
 
     if (!deployedNetwork || !deployedNetwork.address) {
       const deployedIds = Object.keys(networks);

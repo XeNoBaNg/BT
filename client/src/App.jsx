@@ -403,7 +403,7 @@ export default function App() {
         method: "wallet_addEthereumChain",
         params: [
           {
-            chainId: "0x1691", // 5777 in hex
+            chainId: "0x539", // 1337 in hex
             chainName: "Ganache Local",
             rpcUrls: ["http://127.0.0.1:7545"],
             nativeCurrency: {
@@ -416,7 +416,7 @@ export default function App() {
       });
       setStatusMessage({
         type: "success",
-        text: "Added and switched to Ganache Local (5777) in MetaMask!",
+        text: "Added and switched to Ganache Local (1337) in MetaMask!",
       });
       await loadBlockchainData();
     } catch (err) {
