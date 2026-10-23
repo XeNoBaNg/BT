@@ -1,0 +1,19 @@
+{
+  "name": "de-vote",
+  "version": "1.0.0",
+  "description": "De-Vote: Blockchain-based Voting DApp for SPPU BT Lab",
+  "private": true,
+  "scripts": {
+    "compile": "truffle compile",
+    "migrate": "truffle migrate --reset --network development",
+    "test": "truffle test --network development",
+    "client:install": "npm --prefix client install",
+    "client:dev": "npm --prefix client run dev",
+    "client:build": "npm --prefix client run build"
+  },
+  "devDependencies": {
+    "emittery": "^1.1.0",
+    "ganache": "^7.9.2",
+    "truffle": "^5.11.5"
+  }
+}
